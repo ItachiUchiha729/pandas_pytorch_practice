@@ -1,0 +1,13 @@
+.env
+.wrds_pgpass
+data/raw/*.parquet
+data/processed/*.parquet
+outputs/*.csv
+outputs/*.png
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!outputs/.gitkeep
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+
