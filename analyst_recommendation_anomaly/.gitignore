@@ -4,10 +4,11 @@ data/raw/*.parquet
 data/processed/*.parquet
 outputs/*.csv
 outputs/*.png
+outputs/*.log
+presentation/rendered/
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !outputs/.gitkeep
 __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
-

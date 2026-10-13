@@ -4,4 +4,4 @@ matplotlib>=3.7
 pyarrow>=12
 wrds>=3.2
 pytest>=7.4
-
+python-pptx>=1.0
