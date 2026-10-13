@@ -146,7 +146,7 @@ Lower IBES scores are more favorable, so the sign is reversed.}
 \[s^{R}_{i,t}=\mathrm{meanrec}_{i,t-1}-\mathrm{meanrec}_{i,t}\]
 Positive values are upgrades; negative values are downgrades.}
 \vspace{0.25cm}
-\smallhead{Planned conditioning variables:} 12--2 CRSP momentum and analyst coverage (\texttt{numrec}).
+\smallhead{Possible extensions (not in reported results):} 12--2 CRSP momentum and analyst coverage (\texttt{numrec}).
 \end{columns}
 \end{frame}
 
@@ -186,11 +186,9 @@ Weights formed in month $t$ join only to calendar-month $t+1$ returns. CRSP outc
 \begin{columns}[T,onlytextwidth]
 \column{0.54\textwidth}
 \begin{enumerate}\setlength\itemsep{0.42em}
-  \item Restrict to CRSP common stocks on NYSE/AMEX/NASDAQ.
-  \item Require price $\geq\$5$ and at least two analysts.
-  \item Rank the chosen signal within each formation month.
-  \item Long the top decile; short the bottom decile.
-  \item Baseline legs are equal weighted with gross exposure 200\%.
+  \item Keep CRSP common stocks on NYSE/AMEX/NASDAQ with price $\geq\$5$ and at least two recommendations.
+  \item Rank the selected signal within each formation month.
+  \item Equally weight the top decile long and bottom decile short (200\% gross exposure).
   \item Apply month-$t$ weights to month-$t+1$ total returns.
 \end{enumerate}
 \begin{block}{Net strategy return}
@@ -201,28 +199,21 @@ r^{net}_{p,t+1}=\sum_i w_{i,t}r_{i,t+1}
 with baseline $c=10$ basis points.
 \end{block}
 \column{0.43\textwidth}
-\smallhead{Primary specifications}
+\smallhead{Strategies used for reported results}
 \begin{center}\small
 \begin{tabular}{@{}lll@{}}
 \toprule
 Signal & Weight & Holding \\
 \midrule
 Consensus & Equal & 1 month \\
-Consensus & Value & 1 month \\
 Revision & Equal & 1 month \\
-Revision & Value & 1 month \\
-Revision $\times$ momentum & Equal & 1 month \\
 \bottomrule
 \end{tabular}
 \end{center}
 \vspace{0.25cm}
-\smallhead{Report}
-\begin{itemize}\setlength\itemsep{0.28em}
-  \item CAGR and annualized mean/volatility
-  \item Sharpe ratio and maximum drawdown
-  \item Turnover, costs, counts, and coverage
-  \item Factor alpha with robust inference
-\end{itemize}
+\begin{block}{Exact implementation}
+Both legs rebalance monthly and are equally weighted. Recommendations enter after a one-day lag; formation-month signals earn the following month's return. Costs are charged per dollar traded.
+\end{block}
 \end{columns}
 \end{frame}
 
@@ -307,24 +298,21 @@ The revision strategy dominates before costs, but its apparent advantage is not 
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[shrink=5]{Remaining results and robustness to complete}
+\begin{frame}[shrink=5]{Reported baselines and planned robustness checks}
 \centering\small
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
 \textbf{Strategy} & \textbf{Ann. mean} & \textbf{CAGR} & \textbf{Ann. vol.} & \textbf{Sharpe} & \textbf{Max DD} & \textbf{Turnover} \\
 \midrule
 Consensus EW & TBD & TBD & TBD & 0.071$^{*}$ & TBD & TBD \\
-Consensus VW & TBD & TBD & TBD & TBD & TBD & TBD \\
 Revision EW & TBD & TBD & TBD & 0.513$^{*}$ & TBD & TBD \\
-Revision VW & TBD & TBD & TBD & TBD & TBD & TBD \\
-Revision $\times$ momentum & TBD & TBD & TBD & TBD & TBD & TBD \\
 \bottomrule
 \end{tabular}
 \par\scriptsize $^{*}$Gross Sharpe at 0 bps; net-cost sensitivity is reported on the preceding slide.
 \vspace{0.4cm}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
-\begin{block}{Inference}
+\begin{block}{Still to estimate for the two baselines}
 \begin{itemize}\setlength\itemsep{0.25em}
   \item Monthly mean with HAC/Newey--West standard errors
   \item CAPM and multi-factor alpha
