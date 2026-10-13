@@ -72,7 +72,7 @@
 \title{The Analyst Recommendation and\\Earnings Forecast Anomaly}
 \subtitle{Point-in-time IBES signals, CRSP returns, and a leakage-resistant backtest}
 \author{Extra Credit Project 17}
-\date{Research design; empirical results pending validated WRDS data}
+\date{Research design with initial IBES/CRSP cost-sensitivity results}
 
 \begin{document}
 
@@ -217,6 +217,27 @@ Both legs rebalance monthly and are equally weighted. Recommendations enter afte
 \end{columns}
 \end{frame}
 
+\begin{frame}[shrink=7]{Institutional implementation ideas from practitioner notes}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\signalbox{blue}{Consensus basket}{%
+Average the available analyst ratings, subject to a minimum coverage rule; select about 20 names with the strongest consensus; maintain separate long and short baskets; allocate roughly \$500k per name; and rebalance biweekly.}
+\vspace{0.25cm}
+\signalbox{cyan}{Analyst-skill-weighted signal}{%
+Using daily FactSet recommendation events, score each analyst by volatility-normalized stock-minus-index performance over the 30 days after prior calls. Require at least 25 historical calls, then use the analyst score as a weight on new recommendations.}
+\column{0.49\textwidth}
+\signalbox{gold}{Selective trade overlay}{%
+Consider only high-conviction broker/trader ideas, combine them with the analyst signal, reject crowded exposures, require a composite score above 0.75, target about \$100k per stock, and test an average 10-day holding period.}
+\vspace{0.25cm}
+\signalbox{green}{Portfolio construction}{%
+Use a constrained optimizer (the notes reference Axioma) to control market, sector, style, liquidity, and concentration exposures; report both Sharpe and total P\&L under alternative rebalance frequencies.}
+\end{columns}
+\vspace{0.25cm}
+\begin{alertblock}{Scope boundary}
+These are proposed institutional extensions, not features of the reported backtest. The results in this deck use monthly IBES signals, equal-weighted top/bottom deciles, and next-month CRSP returns.
+\end{alertblock}
+\end{frame}
+
 \begin{frame}[shrink=9]{Leakage controls, automated tests, and data audit}
 \begin{columns}[T,onlytextwidth]
 \column{0.49\textwidth}
@@ -269,10 +290,10 @@ Complete consensus and revision baselines first; then add momentum and coverage.
 \end{frame}
 
 \section{Results \& Summary}
-\begin{frame}[shrink=4]{Empirical result: transaction costs materially weaken performance}
+\begin{frame}[shrink=4]{Results so far: transaction costs materially weaken performance}
 \begin{columns}[T,onlytextwidth]
 \column{0.51\textwidth}
-\begin{block}{Sharpe ratio by one-way cost assumption}
+\begin{block}{Monthly baseline Sharpe by cost assumption}
 \centering\large
 \begin{tabular}{@{}rrr@{}}
 \toprule
@@ -290,11 +311,11 @@ Complete consensus and revision baselines first; then add momentum and coverage.
 \vspace{0.28cm}
 \signalbox{cyan}{Revision signal}{Gross Sharpe is much stronger (0.513), yet the signal is highly cost-sensitive and becomes negative at 10 bps.}
 \vspace{0.28cm}
-\signalbox{gold}{Economic implication}{Revision predictability is only potentially implementable with low turnover, low trading costs, or a longer holding/rebalancing design.}
+\signalbox{gold}{Economic implication}{Any biweekly or 10-day institutional variant must earn enough incremental signal quality to offset its likely higher turnover. Selective thresholds, no-trade bands, and optimizer penalties should be tested.}
 \end{columns}
 \vspace{0.25cm}
 \begin{alertblock}{Main conclusion}
-The revision strategy dominates before costs, but its apparent advantage is not robust to conservative implementation costs. Turnover reduction is now a central research question, not a secondary adjustment.
+The monthly revision strategy dominates before costs, but becomes negative at 10 bps per dollar traded. The practitioner overlays are hypotheses for improving selectivity and risk control; the current Sharpe results do not yet validate them.
 \end{alertblock}
 \end{frame}
 
@@ -355,18 +376,12 @@ Do not claim an anomaly from one favorable specification. Emphasize stability, i
 \begin{enumerate}\setlength\itemsep{0.35em}
   \item Complete one-time WRDS Parquet cache.
   \item Audit schemas, links, dates, duplicates, and outcomes.
-  \item Run consensus and revision EW/VW baselines.
-  \item Add momentum, coverage, costs, and factor regressions.
-  \item Replace the two reserved frames with audited results.
+  \item Complete all metrics for the two reported EW baselines.
+  \item Add factor regressions and robustness specifications.
+  \item Test consensus-basket and analyst-skill variants separately.
+  \item Compare monthly, biweekly, and 10-day designs after costs.
 \end{enumerate}
 \end{block}
-\vspace{0.2cm}
-\begin{beamercolorbox}[rounded=true,sep=.7em,wd=\linewidth]{block body}
-\centering\small
-\textbf{Reproducible artifacts}\par
-\texttt{src/} extraction, signals, and backtest\par
-\texttt{tests/} leakage checks \quad \texttt{notebooks/} workflow
-\end{beamercolorbox}
 \end{columns}
 \end{frame}
 
