@@ -92,7 +92,7 @@
     {\large Equity Anomalies Extra Credit Project 17}\\[0.55cm]
     {\normalsize Point-in-time IBES signals, CRSP returns, and a leakage-resistant backtest}\\[0.75cm]
     {\large Research Design Presentation}\\[0.12cm]
-    {\small Empirical results pending validated WRDS data}
+    {\small Cost-sensitivity results available; full performance audit in progress}
   \end{center}
 \end{frame}}
 
@@ -278,41 +278,49 @@ Complete consensus and revision baselines first; then add momentum and coverage.
 \end{frame}
 
 \section{Results \& Summary}
-\begin{frame}[shrink=7]{Empirical results: reserved for validated WRDS output}
+\begin{frame}[shrink=4]{Empirical result: transaction costs materially weaken performance}
 \begin{columns}[T,onlytextwidth]
-\column{0.61\textwidth}
-\begin{beamercolorbox}[rounded=true,sep=1.2em,wd=\linewidth]{block body}
-\centering
-\vspace{0.55cm}
-{\Large\color{mid}\textbf{CUMULATIVE NET WEALTH}}\\[0.25cm]
-{\small\color{mid}Insert consensus, revision, and revision $\times$ momentum series}\\[1.75cm]
-{\footnotesize\color{red}\textbf{Synthetic demo results must not be used here.}}
-\vspace{0.45cm}
-\end{beamercolorbox}
-\column{0.36\textwidth}
-\signalbox{blue}{Baseline summary}{Annualized return: \textbf{TBD}\\Annualized volatility: \textbf{TBD}\\Sharpe ratio: \textbf{TBD}}
-\vspace{0.25cm}
-\signalbox{gold}{Risk and implementation}{Maximum drawdown: \textbf{TBD}\\Average turnover: \textbf{TBD}\\Average positions: \textbf{TBD}}
-\vspace{0.25cm}
-\signalbox{green}{Data quality}{IBES--CRSP link rate: \textbf{TBD}\\Outcome coverage: \textbf{TBD}}
+\column{0.51\textwidth}
+\begin{block}{Sharpe ratio by one-way cost assumption}
+\centering\large
+\begin{tabular}{@{}rrr@{}}
+\toprule
+\textbf{Cost} & \textbf{Consensus} & \textbf{Revision} \\
+\midrule
+0 bps  & 0.071 & \textcolor{green}{\textbf{0.513}} \\
+2 bps  & 0.059 & 0.373 \\
+5 bps  & 0.041 & 0.164 \\
+10 bps & 0.011 & \textcolor{red}{\textbf{$-0.186$}} \\
+\bottomrule
+\end{tabular}
+\end{block}
+\column{0.46\textwidth}
+\signalbox{blue}{Consensus signal}{Sharpe is low even before costs (0.071), but it decays relatively gradually to 0.011 at 10 bps.}
+\vspace{0.28cm}
+\signalbox{cyan}{Revision signal}{Gross Sharpe is much stronger (0.513), yet the signal is highly cost-sensitive and becomes negative at 10 bps.}
+\vspace{0.28cm}
+\signalbox{gold}{Economic implication}{Revision predictability is only potentially implementable with low turnover, low trading costs, or a longer holding/rebalancing design.}
 \end{columns}
 \vspace{0.25cm}
-\centering\small Results are populated only after real-data schemas, links, timing, and missing outcomes pass the audit.
+\begin{alertblock}{Main conclusion}
+The revision strategy dominates before costs, but its apparent advantage is not robust to conservative implementation costs. Turnover reduction is now a central research question, not a secondary adjustment.
+\end{alertblock}
 \end{frame}
 
-\begin{frame}[shrink=5]{Robustness table and inference: reserved}
+\begin{frame}[shrink=5]{Remaining results and robustness to complete}
 \centering\small
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
 \textbf{Strategy} & \textbf{Ann. mean} & \textbf{CAGR} & \textbf{Ann. vol.} & \textbf{Sharpe} & \textbf{Max DD} & \textbf{Turnover} \\
 \midrule
-Consensus EW & TBD & TBD & TBD & TBD & TBD & TBD \\
+Consensus EW & TBD & TBD & TBD & 0.071$^{*}$ & TBD & TBD \\
 Consensus VW & TBD & TBD & TBD & TBD & TBD & TBD \\
-Revision EW & TBD & TBD & TBD & TBD & TBD & TBD \\
+Revision EW & TBD & TBD & TBD & 0.513$^{*}$ & TBD & TBD \\
 Revision VW & TBD & TBD & TBD & TBD & TBD & TBD \\
 Revision $\times$ momentum & TBD & TBD & TBD & TBD & TBD & TBD \\
 \bottomrule
 \end{tabular}
+\par\scriptsize $^{*}$Gross Sharpe at 0 bps; net-cost sensitivity is reported on the preceding slide.
 \vspace{0.4cm}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
