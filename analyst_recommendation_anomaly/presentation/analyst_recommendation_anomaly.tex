@@ -70,33 +70,29 @@
   \end{beamercolorbox}}
 
 \title{Can Analyst Recommendations Predict Returns?}
-\subtitle{Testing consensus and revisions with IBES and CRSP}
-\author{Extra Credit Project 17}
+\subtitle{}
+\author{Chaitanya Pakala and Arsh Deep}
 \date{Research design with initial IBES/CRSP cost-sensitivity results}
 
 \begin{document}
 
 \section{The Idea}
-{\setbeamertemplate{footline}{}
+{\setbeamertemplate{footline}{}\setbeamertemplate{headline}{}
 \begin{frame}
-  \vspace{0.35cm}
+  \vspace{1.05cm}
   \begin{center}
   \begin{tikzpicture}
     \node[fill=black!25,rounded corners=5pt,minimum width=14.1cm,minimum height=2.12cm,xshift=.10cm,yshift=-.10cm] {};
     \node[fill=cobalt,rounded corners=5pt,minimum width=14.1cm,minimum height=2.12cm,text width=13.1cm,align=center,text=white,font=\bfseries\LARGE] {Can Analyst Recommendations\\Predict Returns?};
   \end{tikzpicture}
   \end{center}
-  \vspace{0.35cm}
+  \vspace{0.75cm}
   \begin{center}
-    {\Large Chaithanya Pakala}\\[0.28cm]
-    {\large Equity Anomalies Extra Credit Project 17}\\[0.55cm]
-    {\normalsize Testing consensus and revisions with IBES and CRSP}\\[0.75cm]
-    {\large Project Update}\\[0.12cm]
-    {\small Cost-sensitivity results available; full performance audit in progress}
+    {\Large Chaitanya Pakala and Arsh Deep}
   \end{center}
 \end{frame}}
 
-\begin{frame}[shrink=3]{Why analyst calls might matter}
+\begin{frame}[shrink=10]{Why recommendations might predict returns}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
 \begin{block}{Research question}
@@ -124,7 +120,7 @@ Return predictability must arise \textbf{after} the IBES information becomes obs
 \end{frame}
 
 \section{Signals \& Data}
-\begin{frame}[shrink=6]{Turning IBES recommendations into signals}
+\begin{frame}[shrink=12]{Building the two signals}
 \begin{columns}[T,onlytextwidth]
 \column{0.43\textwidth}
 \smallhead{Licensed data inputs}
@@ -150,7 +146,7 @@ Positive values are upgrades; negative values are downgrades.}
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=3]{Keeping the timeline honest}
+\begin{frame}[shrink=3]{Making sure the timing is clean}
 \centering
 \begin{tikzpicture}[node distance=0.55cm, every node/.style={font=\small,align=center}]
 \node[draw=blue,very thick,rounded corners,fill=blue!8,minimum width=2.55cm,minimum height=1.05cm] (snap) {IBES snapshot\\\texttt{statpers}};
@@ -182,7 +178,7 @@ Weights formed in month $t$ join only to calendar-month $t+1$ returns. CRSP outc
 \end{frame}
 
 \section{Testing the Strategy}
-\begin{frame}[shrink=10]{How the backtest trades}
+\begin{frame}[shrink=10]{From signals to portfolios}
 \begin{columns}[T,onlytextwidth]
 \column{0.54\textwidth}
 \begin{enumerate}\setlength\itemsep{0.42em}
@@ -217,7 +213,7 @@ Both legs rebalance monthly and are equally weighted. Recommendations enter afte
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=7]{From the baseline to a stronger strategy}
+\begin{frame}[shrink=7]{Building a stronger version}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
 \smallhead{Consensus basket}
@@ -255,7 +251,7 @@ These are proposed institutional extensions, not features of the reported backte
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[shrink=9]{Checks that keep the results honest}
+\begin{frame}[shrink=9]{Guarding against false results}
 \begin{columns}[T,onlytextwidth]
 \column{0.49\textwidth}
 \smallhead{Controls embedded in the pipeline}
@@ -284,7 +280,7 @@ Before interpreting returns: audit link rate, ambiguous identifiers, duplicates,
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=10]{Other tests on the research agenda}
+\begin{frame}[shrink=10]{Further tests worth running}
 \scriptsize
 \begin{tabular}{@{}L{2.65cm}L{5.45cm}L{2.55cm}L{1.55cm}@{}}
 \toprule
@@ -307,7 +303,7 @@ Complete consensus and revision baselines first; then add momentum and coverage.
 \end{frame}
 
 \section{What We Found}
-\begin{frame}[shrink=4]{The revision signal works---until costs hit}
+\begin{frame}[shrink=4]{Costs erase the revision advantage}
 \begin{columns}[T,onlytextwidth]
 \column{0.51\textwidth}
 \begin{block}{Monthly baseline Sharpe by cost assumption}
@@ -336,7 +332,7 @@ The monthly revision strategy dominates before costs, but becomes negative at 10
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[shrink=5]{What we know so far}
+\begin{frame}[shrink=5]{Results at a glance}
 \centering\small
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
@@ -371,7 +367,7 @@ Do not claim an anomaly from one favorable specification. Emphasize stability, i
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[shrink=8]{What remains before we trust it}
+\begin{frame}[shrink=12]{What comes next}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
 \smallhead{Known limitations}
