@@ -2,7 +2,7 @@
 
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage{amsmath,amssymb,booktabs,array}
+\usepackage{amsmath,amssymb,booktabs,array,graphicx}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
@@ -82,8 +82,8 @@
   \vspace{1.05cm}
   \begin{center}
   \begin{tikzpicture}
-    \node[fill=black!25,rounded corners=5pt,minimum width=14.1cm,minimum height=2.12cm,xshift=.10cm,yshift=-.10cm] {};
-    \node[fill=cobalt,rounded corners=5pt,minimum width=14.1cm,minimum height=2.12cm,text width=13.1cm,align=center,text=white,font=\bfseries\LARGE] {Can Analyst Recommendations\\Predict Returns?};
+    \node[fill=black!25,rounded corners=5pt,minimum width=13.6cm,minimum height=2.12cm,xshift=.10cm,yshift=-.10cm] {};
+    \node[fill=cobalt,rounded corners=5pt,minimum width=13.6cm,minimum height=2.12cm,text width=12.6cm,align=center,text=white,font=\bfseries\LARGE] {Can Analyst Recommendations\\Predict Returns?};
   \end{tikzpicture}
   \end{center}
   \vspace{0.75cm}
@@ -213,42 +213,36 @@ Both legs rebalance monthly and are equally weighted. Recommendations enter afte
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=7]{Building a stronger version}
+\begin{frame}[shrink=3]{Building a stronger version}
 \begin{columns}[T,onlytextwidth]
-\column{0.48\textwidth}
-\smallhead{Consensus basket}
-\begin{itemize}\setlength\itemsep{0.22em}
-  \item Average available analyst ratings with a minimum coverage rule.
-  \item Select about 20 stocks with the strongest consensus.
-  \item Form separate long and short baskets.
-  \item Test roughly \$500k per name and biweekly rebalancing.
+\column{0.31\textwidth}
+\smallhead{Revision $\times$ weighted basket}
+\begin{itemize}\setlength\itemsep{0.38em}
+  \item Start with recommendation revisions, not consensus levels.
+  \item Scale positions by revision strength and reliability.
+  \item Keep separate long-upgrade and short-downgrade baskets.
 \end{itemize}
+\column{0.31\textwidth}
 \smallhead{Analyst-skill-weighted signal}
-\begin{itemize}\setlength\itemsep{0.22em}
-  \item Use daily IBES recommendation events.
-  \item Measure each analyst's volatility-normalized stock-minus-index return over 30 days after prior calls.
+\begin{itemize}\setlength\itemsep{0.38em}
+  \item Score analysts from daily IBES recommendation events.
+  \item Use volatility-normalized 30-day excess returns after prior calls.
   \item Require at least 25 historical calls.
-  \item Weight new recommendations by the analyst's historical score.
+  \item Weight each new revision by the analyst's historical score.
 \end{itemize}
-\column{0.49\textwidth}
-\smallhead{Selective trade overlay}
-\begin{itemize}\setlength\itemsep{0.22em}
-  \item Keep only high-conviction broker/trader ideas.
-  \item Combine them with the analyst signal and reject crowded exposures.
-  \item Test a composite-score threshold above 0.75.
-  \item Test about \$100k per stock and a 10-day average holding period.
-\end{itemize}
-\smallhead{Portfolio construction}
-\begin{itemize}\setlength\itemsep{0.22em}
-  \item Use a constrained optimizer such as Axioma.
-  \item Control market, sector, style, liquidity, and concentration exposures.
-  \item Compare Sharpe and total P\&L across rebalance frequencies.
+\column{0.31\textwidth}
+\smallhead{Turnover-aware construction}
+\begin{itemize}\setlength\itemsep{0.38em}
+  \item Feed the weighted scores into a constrained optimizer.
+  \item Limit market, sector, style, liquidity, and concentration risk.
+  \item Penalize turnover directly and use no-trade bands.
+  \item Compare holding periods using returns after costs.
 \end{itemize}
 \end{columns}
-\vspace{0.25cm}
-\begin{alertblock}{Scope boundary}
-These are proposed institutional extensions, not features of the reported backtest. The results in this deck use monthly IBES signals, equal-weighted top/bottom deciles, and next-month CRSP returns.
-\end{alertblock}
+\vspace{0.55cm}
+\begin{block}{Design objective}
+Preserve the revision signal's gross advantage while reducing the turnover that makes it unprofitable at higher trading costs. These changes are proposed next steps, not part of the reported baseline.
+\end{block}
 \end{frame}
 
 \begin{frame}[shrink=9]{Guarding against false results}
@@ -324,12 +318,20 @@ Complete consensus and revision baselines first; then add momentum and coverage.
 \vspace{0.28cm}
 \signalbox{cyan}{Revision signal}{Gross Sharpe is much stronger (0.513), yet the signal is highly cost-sensitive and becomes negative at 10 bps.}
 \vspace{0.28cm}
-\signalbox{gold}{Economic implication}{Any biweekly or 10-day institutional variant must earn enough incremental signal quality to offset its likely higher turnover. Selective thresholds, no-trade bands, and optimizer penalties should be tested.}
+\signalbox{gold}{Economic implication}{Any biweekly or 10-day variant must earn enough incremental signal quality to offset its likely higher turnover. Revision weighting, no-trade bands, and optimizer penalties should be tested.}
 \end{columns}
 \vspace{0.25cm}
 \begin{alertblock}{Main conclusion}
 The monthly revision strategy dominates before costs, but becomes negative at 10 bps per dollar traded. The practitioner overlays are hypotheses for improving selectivity and risk control; the current Sharpe results do not yet validate them.
 \end{alertblock}
+\end{frame}
+
+\begin{frame}{Gross returns favor the revision signal}
+\centering
+\includegraphics[width=0.93\textwidth,height=0.73\textheight,keepaspectratio]{assets/cumulative_returns_before_costs.png}
+\vspace{0.08cm}
+
+\scriptsize Gross cumulative return is approximately \textbf{+1.6\%} for consensus versus \textbf{+69.5\%} for revisions. Lines connect available months; gaps are not complete return histories.
 \end{frame}
 
 \begin{frame}[shrink=5]{Results at a glance}
@@ -391,7 +393,7 @@ Do not claim an anomaly from one favorable specification. Emphasize stability, i
   \item Audit schemas, links, dates, duplicates, and outcomes.
   \item Complete all metrics for the two reported EW baselines.
   \item Add factor regressions and robustness specifications.
-  \item Test consensus-basket and analyst-skill variants separately.
+  \item Test revision-weighted and analyst-skill variants separately.
   \item Compare monthly, biweekly, and 10-day designs after costs.
 \end{enumerate}
 \end{block}
