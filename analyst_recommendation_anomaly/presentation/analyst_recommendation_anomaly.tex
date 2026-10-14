@@ -217,20 +217,37 @@ Both legs rebalance monthly and are equally weighted. Recommendations enter afte
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=7]{Institutional implementation ideas from practitioner notes}
+\begin{frame}[shrink=7]{Next steps for a better strategy}
 \begin{columns}[T,onlytextwidth]
 \column{0.48\textwidth}
-\signalbox{blue}{Consensus basket}{%
-Average the available analyst ratings, subject to a minimum coverage rule; select about 20 names with the strongest consensus; maintain separate long and short baskets; allocate roughly \$500k per name; and rebalance biweekly.}
-\vspace{0.25cm}
-\signalbox{cyan}{Analyst-skill-weighted signal}{%
-Using daily FactSet recommendation events, score each analyst by volatility-normalized stock-minus-index performance over the 30 days after prior calls. Require at least 25 historical calls, then use the analyst score as a weight on new recommendations.}
+\smallhead{Consensus basket}
+\begin{itemize}\setlength\itemsep{0.22em}
+  \item Average available analyst ratings with a minimum coverage rule.
+  \item Select about 20 stocks with the strongest consensus.
+  \item Form separate long and short baskets.
+  \item Test roughly \$500k per name and biweekly rebalancing.
+\end{itemize}
+\smallhead{Analyst-skill-weighted signal}
+\begin{itemize}\setlength\itemsep{0.22em}
+  \item Use daily IBES recommendation events.
+  \item Measure each analyst's volatility-normalized stock-minus-index return over 30 days after prior calls.
+  \item Require at least 25 historical calls.
+  \item Weight new recommendations by the analyst's historical score.
+\end{itemize}
 \column{0.49\textwidth}
-\signalbox{gold}{Selective trade overlay}{%
-Consider only high-conviction broker/trader ideas, combine them with the analyst signal, reject crowded exposures, require a composite score above 0.75, target about \$100k per stock, and test an average 10-day holding period.}
-\vspace{0.25cm}
-\signalbox{green}{Portfolio construction}{%
-Use a constrained optimizer (the notes reference Axioma) to control market, sector, style, liquidity, and concentration exposures; report both Sharpe and total P\&L under alternative rebalance frequencies.}
+\smallhead{Selective trade overlay}
+\begin{itemize}\setlength\itemsep{0.22em}
+  \item Keep only high-conviction broker/trader ideas.
+  \item Combine them with the analyst signal and reject crowded exposures.
+  \item Test a composite-score threshold above 0.75.
+  \item Test about \$100k per stock and a 10-day average holding period.
+\end{itemize}
+\smallhead{Portfolio construction}
+\begin{itemize}\setlength\itemsep{0.22em}
+  \item Use a constrained optimizer such as Axioma.
+  \item Control market, sector, style, liquidity, and concentration exposures.
+  \item Compare Sharpe and total P\&L across rebalance frequencies.
+\end{itemize}
 \end{columns}
 \vspace{0.25cm}
 \begin{alertblock}{Scope boundary}
