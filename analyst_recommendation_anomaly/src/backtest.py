@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 import pandas as pd
 
@@ -160,22 +162,36 @@ def run_long_short_backtest(
 def performance_summary(
     monthly_results: pd.DataFrame,
     return_column: str = "net_return",
+    *,
+    strict: bool = False,
 ) -> pd.Series:
-    """Calculate simple annualized performance statistics."""
+    """Report coverage and performance without imputing missing outcomes.
+
+    With gaps, moment statistics describe only observed months and CAGR and
+    drawdown are unavailable. Set strict=True to reject missing held outcomes.
+    """
 
     missing_held_month = monthly_results[return_column].isna() & monthly_results[
         "n_securities"
     ].gt(0)
     if missing_held_month.any():
-        dates = monthly_results.loc[missing_held_month, "date"].dt.strftime("%Y-%m-%d").tolist()
-        raise ValueError(
-            "Cannot summarize performance with missing held-security outcomes. "
-            f"Affected formation months: {dates[:5]}"
+        dates = pd.to_datetime(monthly_results.loc[missing_held_month, "date"]).dt.strftime("%Y-%m-%d").tolist()
+        message = (
+            f"Missing held-security outcomes in {int(missing_held_month.sum())} months. "
+            f"Affected formation months: {dates[:5]}."
+        )
+        if strict:
+            raise ValueError(message)
+        warnings.warn(
+            message + " Available-month statistics exclude missing months and may be biased; "
+            "CAGR and max drawdown are unavailable for an incomplete return series.",
+            stacklevel=2,
         )
     returns = monthly_results[return_column].dropna()
-    if returns.empty:
+    if returns.empty and strict:
         raise ValueError("No returns available for performance summary")
-    cagr = (1.0 + returns).prod() ** (12.0 / len(returns)) - 1.0
+    complete = len(returns) == len(monthly_results) and not returns.empty
+    cagr = (1.0 + returns).prod() ** (12.0 / len(returns)) - 1.0 if complete else np.nan
     annualized_mean = returns.mean() * 12.0
     annual_volatility = returns.std(ddof=1) * np.sqrt(12.0)
     sharpe = (
@@ -184,15 +200,19 @@ def performance_summary(
         else np.nan
     )
     wealth = (1.0 + returns).cumprod()
-    drawdown = wealth / wealth.cummax() - 1.0
+    drawdown = wealth / wealth.cummax().clip(lower=1.0) - 1.0
     return pd.Series(
         {
             "months": len(returns),
+            "total_months": len(monthly_results),
+            "missing_return_months": int(monthly_results[return_column].isna().sum()),
+            "months_with_missing_held_return": int(missing_held_month.sum()),
+            "return_coverage": len(returns) / len(monthly_results) if len(monthly_results) else np.nan,
             "cagr": cagr,
             "annualized_mean_return": annualized_mean,
             "annual_volatility": annual_volatility,
             "sharpe_zero_rf": sharpe,
-            "max_drawdown": drawdown.min(),
+            "max_drawdown": drawdown.min() if complete else np.nan,
             "average_monthly_turnover": monthly_results.loc[returns.index, "turnover"].mean(),
         }
     )

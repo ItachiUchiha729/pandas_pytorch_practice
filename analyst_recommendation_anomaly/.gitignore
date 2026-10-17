@@ -1,9 +1,11 @@
 .env
 .wrds_pgpass
 data/raw/*.parquet
+data/raw/ibes_analyst_*/
 data/processed/*.parquet
 outputs/*.csv
 outputs/*.png
+outputs/audit/
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !outputs/.gitkeep
@@ -11,3 +13,9 @@ __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
 
+
+# Licensed daily extracts and generated analyst-strategy artifacts
+data/raw/analyst_daily_*/
+outputs/analyst_sharpe/
+# Executed presentation notebooks, HTML, tables and figures
+outputs/presentations/

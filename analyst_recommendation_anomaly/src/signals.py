@@ -62,7 +62,11 @@ def make_recommendation_signals(
     linked_recommendations: pd.DataFrame,
     publication_lag_days: int = 1,
 ) -> pd.DataFrame:
-    """Create consensus and revision signals using only contemporaneous/past data."""
+    """Create consensus and revisions from unambiguous historical snapshots.
+
+    Exact repeated rows are collapsed. Conflicting security/date snapshots are
+    excluded with a warning; revisions use the previous retained snapshot.
+    """
 
     if publication_lag_days < 0:
         raise ValueError("publication_lag_days must be nonnegative")
@@ -75,13 +79,18 @@ def make_recommendation_signals(
     frame["available_date"] = frame["statpers"] + pd.to_timedelta(
         publication_lag_days, unit="D"
     )
+    frame = frame.drop_duplicates()
     duplicates = frame.duplicated(["permno", "statpers"], keep=False)
     if duplicates.any():
-        examples = frame.loc[duplicates, ["permno", "statpers"]].head().to_dict("records")
-        raise ValueError(
-            "Multiple recommendation rows map to the same PERMNO/statpers; "
-            f"audit the identifier link before computing revisions. Examples: {examples}"
+        keys = frame.loc[duplicates, ["permno", "statpers"]].drop_duplicates()
+        warnings.warn(
+            f"Dropping {int(duplicates.sum())} ambiguous recommendation rows across "
+            f"{len(keys)} PERMNO/statpers pairs. Multiple IBES records map to the "
+            "same security/date; revisions use the previous retained snapshot. "
+            f"Examples: {keys.head().to_dict('records')}",
+            stacklevel=2,
         )
+        frame = frame.loc[~duplicates].copy()
     frame = frame.sort_values(["permno", "statpers"])
     frame["consensus_signal"] = -frame["meanrec"]
     prior_meanrec = frame.groupby("permno", sort=False)["meanrec"].shift(1)
